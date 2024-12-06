@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="container mx-auto">
+    <h2 th:text="'Search: ' + ${search.text}"></h2>
+
+    <ul class="list-none flex flex-row flex-wrap gap-4">
+        <li class="flex flex-col border-2 border-indigo p-4 rounded" th:each="book : ${books}">
+            <h2 class="text-xl" th:text="${book.title}"></h2>
+            <span class="text-xs">Author: <i th:text="${book.author}"></i></span>
+            <p class="mt-2" th:text="${book.description}"></p>
+            <span class="text-xs mt-2" th:text="'ISBN: ' + ${book.ISBN}"></span>
+
+            <button type="button" class="rounded-md bg-indigo-600 px-2.5 py-1.5 w-fit text-sm font-semibold text-white mx-auto mt-4">Kaufen</button>
+        </li>
+    </ul>
+
+</body>
+</html>
