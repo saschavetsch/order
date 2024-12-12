@@ -3,13 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <h2>search</h2>
+<body class="container mx-auto">
+    <h1 class="text-3xl text-emerald-700 text-center mt-16">Book-search</h1>
     <form action="#" th:action="@{/books/search}" th:object="${search}" method="POST">
-        <label for="search">Buchsuche</label>
-        <input type="text" name="search" id="search" th:field="*{text}" />
-        <button type="submit">Suchen</button>
+        <div class="mt-8 flex gap-2 items-center justify-center">
+            <label for="search" class="block text-sm/6 font-medium text-gray-900">Search</label>
+            <input type="text" name="search" id="search" th:field="*{text}"
+                   class="block w-64 rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-emerald-700 sm:text-sm/6"
+            >
+
+            <button type="submit"
+                    class="rounded-md bg-emerald-700 px-2.5 py-1.5 text-sm font-semibold text-white"
+            >
+                Search
+            </button>
+        </div>
     </form>
 </body>
 </html>

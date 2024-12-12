@@ -20,4 +20,11 @@ public class CatalogClient {
                 .body(Book[].class);
     }
 
+    public Book getBook(String isbn) {
+        return restClient
+                .get()
+                .uri("http://localhost:8080/books/%s".formatted(isbn))
+                .retrieve()
+                .body(Book.class);
+    }
 }

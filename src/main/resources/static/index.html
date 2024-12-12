@@ -3,9 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <h1>index</h1>
-    <p>zur buchsuche: <a href="books/search">GO</a></p>
+<body class="h-screen container mx-auto flex flex-col justify-center items-center">
+    <h1 class="text-3xl mb-6">Welcome to our online bookstore</h1>
+    <a href="books/search">
+        <button type="button"
+                class="rounded-md bg-emerald-700 px-2.5 py-1.5 w-fit text-sm font-semibold text-white mx-auto mt-4"
+        >
+            Go to book-search
+        </button>
+    </a>
 </body>
 </html>
