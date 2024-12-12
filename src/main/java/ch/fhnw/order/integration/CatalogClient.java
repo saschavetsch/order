@@ -15,7 +15,7 @@ public class CatalogClient {
     public Book[] findBooks(String search) {
         return restClient
                 .get()
-                .uri("http://localhost:8080/books?search=%s".formatted(search))
+                .uri("http://catalog:8080/books?search=%s".formatted(search))
                 .retrieve()
                 .body(Book[].class);
     }
