@@ -8,28 +8,33 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@RequestMapping("/books")
 public class OrderController {
     private final CatalogClient catalogClient;
 
     private final ShoppingCart shoppingCart = new ShoppingCart();
 
+    private String searchString = "";
+
     public OrderController(CatalogClient catalogClient) {
         this.catalogClient = catalogClient;
     }
-    @GetMapping("/search")
+    @GetMapping("")
     public String searchForm(Model model) {
         model.addAttribute("search", new BookSearch());
-        return "book_search";
+        model.addAttribute("cartCount", shoppingCart.getItemCount());
+        return "index";
     }
 
     @PostMapping("/search")
-    public String searchSubmit(@ModelAttribute BookSearch search, Model model) {
+    public String searchResult(@ModelAttribute BookSearch search, Model model) {
         model.addAttribute("search", search);
+        if (search.getText() != null && !search.getText().isEmpty()) {
+            searchString = search.getText();
+        }
+        model.addAttribute("books", catalogClient.findBooks(searchString));
+        model.addAttribute("cartCount", shoppingCart.getItemCount());
 
-        model.addAttribute("books", catalogClient.findBooks(search.getText()));
-
-        return "book_result";
+        return "index";
     }
 
     @GetMapping("/cart/add/{isbn}")
@@ -39,7 +44,7 @@ public class OrderController {
             shoppingCart.addItem(book);
         }
 
-        return shoppingCart(model);
+        return searchResult(new BookSearch(), model);
     }
 
     @GetMapping("/cart")

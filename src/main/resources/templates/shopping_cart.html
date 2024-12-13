@@ -6,7 +6,16 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="container mx-auto">
-<h1 class="text-3xl text-emerald-700 text-center mt-16">Your shopping cart</h1>
+    <div class="flex justify-between mt-4 px-4">
+        <a th:href="@{'/'}" class="group -m-2 flex items-center p-2">
+            <svg class="size-6 shrink-0 text-gray-400 group-hover:text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+            </svg>
+
+        </a>
+    </div>
+
+    <h1 class="text-3xl text-emerald-700 text-center mt-16">Your shopping cart</h1>
     <ul class="list-none flex flex-row flex-wrap items-center justify-center gap-6 mt-8 mx-4">
         <li class="flex flex-col border-2 border-emerald-700 p-4 rounded grow" th:each="book : ${items}">
             <h2 class="text-xl" th:text="${book.title}"></h2>
