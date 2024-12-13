@@ -38,6 +38,9 @@ public class OrderApplicationE2ETests {
         page.navigate(BASE_URL);
         assertEquals("Title", page.title());
 
+        // Navigate from welcome page to book-search
+        page.locator("button:has-text('Go to book-search')").click();
+        
         // Enter search term one by one - search for "Sapiens"
         page.locator("#search").pressSequentially("Sapiens");
         page.locator("#submit").click();
