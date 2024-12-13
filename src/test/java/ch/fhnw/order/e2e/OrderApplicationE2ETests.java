@@ -1,7 +1,6 @@
 package ch.fhnw.order.e2e;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.AfterAll;
@@ -9,23 +8,24 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import com.microsoft.playwright.Browser;
+import com.microsoft.playwright.BrowserContext;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
-import com.microsoft.playwright.Response;
 
 
 public class OrderApplicationE2ETests {
     static Playwright playwright;
     static Browser browser;
+    static BrowserContext context;
     static Page page;
     static final String BASE_URL = "http://localhost:8081";
-
 
     @BeforeAll
     static void launchBrowser() {
         playwright = Playwright.create();
         browser = playwright.chromium().launch();
-        page = browser.newPage();
+        context = browser.newContext();
+        page = context.newPage();
     }
 
     @AfterAll
@@ -36,14 +36,25 @@ public class OrderApplicationE2ETests {
     @Test
     void testSuccessfulOrderExecution() {
         page.navigate(BASE_URL);
-        Response navigationResponse = page.navigate(BASE_URL);
-        assertTrue(navigationResponse.ok());
-        assertEquals(200, navigationResponse.status());
+        assertEquals("Title", page.title());
 
-        assertEquals(BASE_URL + "/", page.url());
+        // Enter search term one by one - search for "Sapiens"
+        page.locator("#search").pressSequentially("Sapiens");
+        page.locator("#submit").click();
 
-        assertNotNull(page.title());
+        // Test if book has been found
+        assertTrue(page.isVisible("text=Sapiens"));
 
-        assertTrue(page.isVisible("body"));
+        // Add book to cart
+        page.locator("button:has-text('Add to cart')").first().click();
+        
+        // Check if cart icon shows correct book count
+        assertEquals("1", page.locator(".ml-2.text-sm.font-medium").innerText());
+
+        // Press cart icon
+        page.locator("a[href='/cart']").click();
+
+        // Check if book has been added to the shopping cart
+        assertTrue(page.isVisible("text=Sapiens"));
     }
 }
