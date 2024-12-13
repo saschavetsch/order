@@ -13,4 +13,8 @@ public class ShoppingCart {
     public void addItem(Book book) {
         cart.add(book);
     }
+
+    public int getItemCount() {
+        return cart.size();
+    }
 }
