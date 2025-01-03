@@ -65,12 +65,19 @@ jobs:
       # Another approach would be needed if there were unit tests in the application
       # Either: Start application and then run all the tests afterwards
       # Or: Change the appliled profile in Java for e2e tests to run them separately
+      # - name: Build application
+      #   run: mvn clean package spring-boot:build-image -DskipTests
+
       - name: Build application
-        run: mvn clean package spring-boot:build-image -DskipTests
+        run: mvn clean spring-boot:build-image -DskipTests -Dspring-boot.build-image.imageName=order-test:latest
 
       # New Step: Start application
+      # - name: Start application
+      #   run: docker run -d -p 8081:8081 --name order-app $(docker images 'docker.io/library/order:*' --format '{{.Repository}}:{{.Tag}}' | head -n 1)
+
       - name: Start application
-        run: docker run -d -p 8081:8081 --name order-app $(docker images 'docker.io/library/order:*' --format '{{.Repository}}:{{.Tag}}' | head -n 1)
+        run: docker run -d -p 8081:8081 --name order-app order-test:latest
+
 
       # # New Step: Wait for application to start with a multi-line script as above
       # - name: Wait for application to start
