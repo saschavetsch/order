@@ -40,7 +40,7 @@ jobs:
         run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/catalog:latest
 
       - name: Start catalog service
-        run: docker run -d -p 8081:8081 --name catalog-app catalog:latest
+        run: docker run -d -p 8081:8081 --name catalog-app ${{ secrets.DOCKERHUB_USERNAME }}/catalog:latest
 
       # Step 4: Build the project using Maven
       - name: Build with Maven
