@@ -7,6 +7,6 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 FROM eclipse-temurin:21
 WORKDIR /order
-COPY --from=build /order/target/*.jar app.jar
+COPY --from=build /order/target/OrderApplication.jar app.jar
 EXPOSE 8081
 CMD ["java", "-jar", "app.jar"]

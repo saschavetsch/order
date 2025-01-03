@@ -66,9 +66,17 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                  <configuration>
-                    <finalName>OrderApplication</finalName>
+                <configuration>
+                    <finalName>OrderApplication</finalName> 
+                    <mainClass>ch.fhnw.order.OrderApplication</mainClass>
                 </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
             <plugin>
