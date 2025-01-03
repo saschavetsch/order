@@ -43,7 +43,7 @@ jobs:
         run: docker run -d -p 8080:8080 --name catalog-app ${{ secrets.DOCKERHUB_USERNAME }}/catalog:latest
 
       # Step 4: Build the project using Maven
-      - name: Build with Maven
+      - name: Start catalog service container
         # Run Maven Spring-Boot build-image task (includes test and package)
         # First -> check if catalog service is up and running
         # Execute a multi-line script for the run method -> | (pipe)
@@ -60,8 +60,36 @@ jobs:
             timeout=$((timeout - 5))
           done
           echo "Catalog service is ready!"
-          mvn spring-boot:build-image jacoco:report
- 
+
+      # New Step: Build application - skip tests (e2e)
+      # Another approach would be needed if there were unit tests in the application
+      # Either: Start application and then run all the tests afterwards
+      # Or: Change the appliled profile in Java for e2e tests to run them separately
+      - name: Build application
+        run: mvn clean package spring-boot:build-image jacoco:report -DskipTests
+
+      # New Step: Start application
+      - name: Start application
+        run: java -jar target/OrderApplication.jar &
+
+      # New Step: Wait for application to start with a multi-line script as above
+      - name: Wait for application to start
+        run: |
+          timeout=300
+          while ! curl -s -o /dev/null -w "%{http_code}" http://localhost:8081 | grep -q "200"
+          do
+            if [ $timeout -le 0 ]; then
+              echo "Application failed to start"
+              exit 1
+            fi
+            echo "Waiting for application to start..."
+            sleep 5
+            timeout=$((timeout - 5))
+          done
+
+      # New Step: Run tests
+      - name: Run tests
+        run: mvn test
 
       # New Step: Upload test results as artifacts
       - name: Upload Test Results
@@ -71,6 +99,10 @@ jobs:
           name: test-reports
           path: target/surefire-reports/
           retention-days: 7
+
+      # New Step: Stop application again
+      - name: Stop application
+        run: pkill -f 'java -jar target/CatalogApplication.jar'
 
       - name: Stop and remove other app container
         run: |
