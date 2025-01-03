@@ -35,6 +35,13 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}   # Cache key based on OS and pom.xml
           restore-keys: ${{ runner.os }}-m2                         # Fallback cache key (if path to cache not found)
 
+      # Step 5: Pull latest image of catalog for Playwright tests
+      - name: Pull latest image of catalog
+        run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/catalog:latest
+
+      - name: Start catalog service
+        run: docker run -d -p 8081:8081 --name catalog-app catalog:latest
+
       # Step 4: Build the project using Maven
       - name: Build with Maven
         run: mvn spring-boot:build-image jacoco:report   # Run Maven Spring-Boot build-image task (includes test and package)
@@ -47,6 +54,11 @@ jobs:
           name: test-reports
           path: target/surefire-reports/
           retention-days: 7
+
+      - name: Stop and remove other app container
+        run: |
+          docker stop catalog-app
+          docker rm catalog-app
 
       # Step 6: Authenticate with DockerHub
       # https://hub.docker.com/u/saschavetsch
