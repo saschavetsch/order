@@ -1,4 +1,3 @@
-# Workflow name that appears in GitHub Actions UI
 name: CI/CD Order
 
 # Define when this workflow will run
