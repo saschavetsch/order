@@ -78,39 +78,20 @@ jobs:
       - name: Start application
         run: docker run -d -p 8081:8081 --name order-app order-test:latest
 
-
-      # # New Step: Wait for application to start with a multi-line script as above
-      # - name: Wait for application to start
-      #   run: |
-      #     timeout=300
-      #     while ! curl -s -o /dev/null -w "%{http_code}" http://localhost:8081 | grep -q "200"
-      #     do
-      #       if [ $timeout -le 0 ]; then
-      #         echo "Application failed to start"
-      #         exit 1
-      #       fi
-      #       echo "Waiting for application to start..."
-      #       sleep 5
-      #       timeout=$((timeout - 5))
-      #     done
-
+      # New Step: Wait for application to start with a multi-line script as above
       - name: Wait for application to start
         run: |
           timeout=300
-          while [ $timeout -gt 0 ]
+          while ! curl -s -o /dev/null -w "%{http_code}" http://localhost:8081 | grep -q "200"
           do
-            response=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8081)
-            echo "Response code: $response"
-            if [[ $response == "200" ]]; then
-              echo "Application is ready!"
-              exit 0
+            if [ $timeout -le 0 ]; then
+              echo "Application failed to start"
+              exit 1
             fi
-            echo "Waiting for application to start... Timeout in $timeout seconds"
+            echo "Waiting for application to start..."
             sleep 5
             timeout=$((timeout - 5))
           done
-          echo "Application failed to start within the timeout period"
-          exit 1
 
       # # New Step: Wait for application startup
       # - name: Wait for application startup
