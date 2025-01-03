@@ -36,7 +36,15 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}   # Cache key based on OS and pom.xml
           restore-keys: ${{ runner.os }}-m2                         # Fallback cache key (if path to cache not found)
 
+      # Step 4: Cache Playwright browsers
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('**/pom.xml') }}
+
       # Step 5: Pull latest image of catalog for Playwright tests
+      # Needs Catalog Service Image on Docker-Hub -> Pipeline Catalog needs to be executed first
       - name: Pull latest image of catalog
         run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/catalog:latest
 
