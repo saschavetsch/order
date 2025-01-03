@@ -78,27 +78,29 @@ jobs:
       # - name: Start application
       #   run: docker run -d -p 8081:8081 --name order-app order-test:latest
 
-
       - name: Install Playwright browsers
         run: mvn exec:java -e -D exec.mainClass=com.microsoft.playwright.CLI -D exec.args="install --with-deps"
-      
-      - name: Install Maven Dependencies
-        run: mvn clean install -DskipTests
+
+      - name: Build application
+        run: mvn clean package -DskipTests
+
+      - name: Start application
+        run: java -jar target/CatalogApplication.jar &
 
       # New Step: Wait for application to start with a multi-line script as above
-      # - name: Wait for application to start
-      #   run: |
-      #     timeout=300
-      #     while ! curl -s -o /dev/null -w "%{http_code}" http://localhost:8081 | grep -q "200"
-      #     do
-      #       if [ $timeout -le 0 ]; then
-      #         echo "Application failed to start"
-      #         exit 1
-      #       fi
-      #       echo "Waiting for application to start..."
-      #       sleep 5
-      #       timeout=$((timeout - 5))
-      #     done
+      - name: Wait for application to start
+        run: |
+          timeout=300
+          while ! curl -s -o /dev/null -w "%{http_code}" http://localhost:8081 | grep -q "200"
+          do
+            if [ $timeout -le 0 ]; then
+              echo "Application failed to start"
+              exit 1
+            fi
+            echo "Waiting for application to start..."
+            sleep 5
+            timeout=$((timeout - 5))
+          done
 
       # # New Step: Wait for application startup
       # - name: Wait for application startup
@@ -107,6 +109,10 @@ jobs:
       # New Step: Run tests
       - name: Run tests
         run: mvn test
+
+      # New Step: Stop application
+      - name: Stop application
+        run: pkill -f 'java -jar'
 
       # New Step: Upload test results as artifacts
       - name: Upload Test Results
