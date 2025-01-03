@@ -70,7 +70,7 @@ jobs:
 
       # New Step: Start application
       - name: Start application
-        run: docker run -d -p 8081:8081 --name order-app order:latest
+        run: docker run -d -p 8081:8081 --name order-app $(docker images -q | head -n 1)
 
       # New Step: Wait for application to start with a multi-line script as above
       - name: Wait for application to start
