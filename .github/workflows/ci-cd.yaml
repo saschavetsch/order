@@ -87,6 +87,10 @@ jobs:
       #       timeout=$((timeout - 5))
       #     done
 
+      # New Step: Wait for application startup
+      - name: Wait for application startup
+        run: sleep 30
+
       # New Step: Run tests
       - name: Run tests
         run: mvn test
