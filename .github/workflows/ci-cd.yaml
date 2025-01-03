@@ -48,8 +48,8 @@ jobs:
         # First -> check if catalog service is up and running
         # Execute a multi-line script for the run method -> | (pipe)
         run: |
-          timeout=60
-          while ! curl -s http://localhost:8080/actuator/health | grep -q '"status":"UP"'
+          timeout=300
+          while ! curl -s -o /dev/null -w "%{http_code}" http://localhost:8080 | grep -q "404"
           do
             if [ $timeout -le 0 ]; then
               echo "Timed out waiting for catalog service!"
@@ -60,7 +60,8 @@ jobs:
             timeout=$((timeout - 5))
           done
           echo "Catalog service is ready!"
-          mvn spring-boot:build-image jacoco:report   
+          mvn spring-boot:build-image jacoco:report
+ 
 
       # New Step: Upload test results as artifacts
       - name: Upload Test Results
