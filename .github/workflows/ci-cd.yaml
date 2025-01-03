@@ -86,19 +86,19 @@ jobs:
         run: mvn clean install -DskipTests
 
       # New Step: Wait for application to start with a multi-line script as above
-      - name: Wait for application to start
-        run: |
-          timeout=300
-          while ! curl -s -o /dev/null -w "%{http_code}" http://localhost:8081 | grep -q "200"
-          do
-            if [ $timeout -le 0 ]; then
-              echo "Application failed to start"
-              exit 1
-            fi
-            echo "Waiting for application to start..."
-            sleep 5
-            timeout=$((timeout - 5))
-          done
+      # - name: Wait for application to start
+      #   run: |
+      #     timeout=300
+      #     while ! curl -s -o /dev/null -w "%{http_code}" http://localhost:8081 | grep -q "200"
+      #     do
+      #       if [ $timeout -le 0 ]; then
+      #         echo "Application failed to start"
+      #         exit 1
+      #       fi
+      #       echo "Waiting for application to start..."
+      #       sleep 5
+      #       timeout=$((timeout - 5))
+      #     done
 
       # # New Step: Wait for application startup
       # - name: Wait for application startup
@@ -121,9 +121,7 @@ jobs:
       - name: Stop and remove other app container
         run: |
           docker stop catalog-app
-          docker stop order-app
           docker rm catalog-app
-          docker rm order-app
 
       # Step 6: Authenticate with DockerHub
       # https://hub.docker.com/u/saschavetsch
