@@ -85,7 +85,7 @@ jobs:
         run: mvn clean package -DskipTests
 
       - name: Start application
-        run: java -jar target/CatalogApplication.jar &
+        run: java -jar target/OrderApplication.jar &
 
       # New Step: Wait for application to start with a multi-line script as above
       - name: Wait for application to start
