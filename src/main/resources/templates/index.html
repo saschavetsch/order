@@ -38,6 +38,10 @@
         </div>
     </form>
 
+        <div th:if="${error}" class="text-red-500 mt-4 text-center">
+            <p th:text="${error}"></p>
+        </div>
+
         <div th:if="${not #lists.isEmpty(books)}">
             <h1 class="text-3xl text-emerald-700 text-center mt-16">Books</h1>
 
